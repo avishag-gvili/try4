@@ -15,9 +15,9 @@ jobs:
       # Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
-      # Validate branch name
+     # Validate branch name (שלב אימות שם ענף)
       - name: Validate branch name
-        if: ${{ github.event_name != 'pull_request' }}  # Perform validation only for push events
+        if: ${{ github.event_name == 'push' }}  # Perform validation only for push events
         run: |
           echo "Validating branch name..."
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
