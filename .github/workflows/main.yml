@@ -54,8 +54,13 @@ jobs:
       - name: Display installed packages
         run: npm list
 
-      # Run tests
-      - name: Run tests
-        if: ${{ fileExists('path/to/your/test/file.js') }}
-        run: npm test
+    # Run tests if the test file exists
+      - name: Run tests if test file exists
+        run: |
+         if [ -f path/to/your/test/file.js ]; then
+         npm test
+         else
+         echo "No test file found. Skipping tests."
+         fi
+
 
