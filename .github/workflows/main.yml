@@ -41,12 +41,13 @@ jobs:
       # Check if branch name format is correct
       - name: Check branch name format
         run: |
-          if [[ $GITHUB_REF =~ ^refs/heads/name/.*$ ]]; then
-            echo "Branch name format is correct."
-          else
-            echo "Branch name format is incorrect. CI process failed."
-            exit 1
-          fi
+         if [[ $GITHUB_REF =~ ^refs/heads/name/[^/]+$ ]]; then
+         echo "Branch name format is correct."
+         else
+         echo "Branch name format is incorrect. CI process failed."
+         exit 1
+         fi
+
 
       # Run tests in all files within the 'test' directory
       - name: Run tests in 'test' directory
