@@ -1,60 +1,62 @@
 name: Node.js CI
 on:
-  push:
-    branches:
-      - master
-      - 'name/*'
-  pull_request:
-    branches:
-      - master
-      - 'name/*'
+  push:
+    branches:
+      - master
+      - 'name/*'
+  pull_request:
+    branches:
+      - master
+      - 'name/*'
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      # Checkout the repository
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Validate branch name
-        if: ${{ github.event_name == 'push' }}  # Perform validation only for push events
-        run: |
-          echo "Validating branch name..."
-          BRANCH_NAME=${GITHUB_REF#refs/heads/}
-          echo "Current branch: $BRANCH_NAME"
-          if [[ ! "$BRANCH_NAME" =~ ^name/[a-zA-Z0-9_-]+$ && "$BRANCH_NAME" != "master" ]]; then
-            echo "Branch name does not follow the required pattern (name/branchname or master)."
-            # Use set-failure instead of exit 1
-            echo "## Branch name validation failed"
-            exit-code=1
-            ::set-failure state=failure message="Branch name validation failed"
-          fi
-          echo "Branch name is valid."
-      # Set up Node.js environment
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-      # Display Node.js version
-      - name: Display Node.js version
-        run: node --version
-      # Display npm version
-      - name: Display npm version
-        run: npm --version
-      # Install dependencies
-      - name: Install dependencies
-        run: npm install
-      # Display installed packages
-      - name: Display installed packages
-        run: npm list
-      # Run tests in all files within the 'test' directory
-      - name: Run tests in 'test' directory
-        run: |
-         if [ -d test ]; then  # Check if the 'test' directory exists
-         for file in test/*; do
-         if [ -f "$file" ]; then
-          npm test "$file"
-          fi
-          done
-         else
-          echo "'test' directory not found. Skipping tests."
-          fi
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+        # Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+        # Display Node.js version
+      - name: Display Node.js version
+        run: node --version
+
+        # Display npm version
+      - name: Display npm version
+        run: npm --version
+
+        # Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+        # Display installed packages
+      - name: Display installed packages
+        run: npm list
+
+        # Check if branch name format is correct
+      - name: Check branch name format
+        run: |
+          if [[ $GITHUB_REF =~ ^refs/heads/name/.*$ ]]; then
+            echo "Branch name format is correct."
+          else
+            echo "Branch name format is incorrect. CI process failed."
+            exit 1
+          fi
+
+        # Run tests in all files within the 'test' directory
+      - name: Run tests in 'test' directory
+        run: |
+          if [ -d test ]; then # Check if the 'test' directory exists
+            for file in test/*; do
+              if [ -f "$file" ]; then
+                npm test "$file"
+              fi
+            done
+          else
+            echo "'test' directory not found. Skipping tests."
+          fi
