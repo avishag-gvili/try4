@@ -1,12 +1,13 @@
 {
   "name": "ci-node",
   "version": "1.0.0",
+  "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "runing testes.........",
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "echo \"Running tests...\""
   },
+  "keywords": [],
   "author": "",
-  "license": "ISC",
-  "description": ""
+  "license": "ISC"
 }
