@@ -7,7 +7,7 @@ const port = 3000;
 // });
 
 // app.listen(port, () => {
-  console.log(`Example/88www858/77777/=== app listening at http://localhost:${port}`);
+  console.log(`Eeeexample/88www858/77777/=== app listening at http://localhost:${port}`);
 // });
   // "dependencies": {
   //   "express": "^4.19.2"
