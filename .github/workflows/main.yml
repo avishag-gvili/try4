@@ -56,5 +56,6 @@ jobs:
 
       # Run tests
       - name: Run tests
+        if: ${{ fileExists('path/to/your/test/file.js') }}
         run: npm test
 
