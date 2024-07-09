@@ -15,7 +15,6 @@ jobs:
       # Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
-     # Validate branch name (שלב אימות שם ענף)
       - name: Validate branch name
         if: ${{ github.event_name == 'push' }}  # Perform validation only for push events
         run: |
@@ -24,7 +23,10 @@ jobs:
           echo "Current branch: $BRANCH_NAME"
           if [[ ! "$BRANCH_NAME" =~ ^name/[a-zA-Z0-9_-]+$ && "$BRANCH_NAME" != "master" ]]; then
             echo "Branch name does not follow the required pattern (name/branchname or master)."
-            exit 1
+            # Use set-failure instead of exit 1
+            echo "## Branch name validation failed"
+            exit-code=1
+            ::set-failure state=failure message="Branch name validation failed"
           fi
           echo "Branch name is valid."
       # Set up Node.js environment
