@@ -19,18 +19,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Validate branch name
+    # Validate branch name
       - name: Validate branch name
-        if: ${{ github.event_name != 'pull_request' }}  # Perform validation only for push events
+        if: "!startsWith(github.ref, 'refs/heads/name/')"
         run: |
-          echo "Validating branch name..."
-          BRANCH_NAME=${GITHUB_REF#refs/heads/}
-          echo "Current branch: $BRANCH_NAME"
-          if [[ ! "$BRANCH_NAME" =~ ^name/[a-zA-Z0-9_-]+$ && "$BRANCH_NAME" != "master" ]]; then
-            echo "Branch name does not follow the required pattern (name/branchname or master)."
-            exit 1
-          fi
-          echo "Branch name is valid."
+         echo "Branch name does not follow the required pattern."
+         exit 1
+
 
       # Set up Node.js environment
       - name: Set up Node.js
